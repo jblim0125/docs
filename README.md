@@ -6,14 +6,14 @@ permalink: /
 
 블로그 시작
 
-## 업무 변천사
-Android Framework  
-Linux Network Program, DPDK, VM, OpenStack  
-Container(Docker, K8S)  
-Java, SpringBoot, JPA, ...  
+## 관심 기술과 블로그에 작성될 내용들  
+OS : Linux   
+Platform : Container   
+Programming Language : Java, Golang, C, Python  
+Frameworks : Echo, SpringBoot  
+Interface : gRPC, Message Queue, HTTP  
 
-현재 Java, Golang 중 Java가 주요 개발 언어가 될 것 같으며, 
-개발환경은 여전히 vim 입력환경을 선호하고, IntelliJ, Goland, VIM 을 사용 중   
+개발환경 vim 입력환경, Jetbrain IDE Tool, VIM  
 
 ## License
 
