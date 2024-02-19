@@ -13,8 +13,8 @@ layout: post
 - Right-Command(한/영) -> F18
 - Pause/Break -> Power 
 
-맥 키보드(최근은 아님)  
-![맥 키보드](./images/2024-02-15-15-53-49.png)
+풀 배열 맥 키보드  
+![alt text](/assets/images/mac-key-remap/image01.png)
 
 아래 링크는 hidutil을 이용해 키보드 리매핑을 도와주는 사이트이다.   
 접속해서 원하는 설정을 추가한다.  
@@ -61,6 +61,6 @@ vi or 텍스트 편집기를 이용해 파일 생성
 이름 : com.local.KeyRemapping.plist 
 
 한/영키 활성화를 위한 단축키 설정  
-![단축키 설정](./images/2024-02-15-17-23-27.png)
+![단축키 설정](/assets/images/mac-key-remap/2024-02-15-17-23-27.png)
 
 이제 설정한 FN + Break 키를 이용해 종료기능 사용 가능  
