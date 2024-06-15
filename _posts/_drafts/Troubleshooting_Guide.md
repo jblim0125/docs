@@ -5,7 +5,7 @@
     CoreDNS에서 외부 DNS 서버를 모르는 상태인 경우  
     /etc/resolve.conf 변경 후 CoreDNS 재 시작  
 
-- NBP 환경(네이버 비즈니스 파트너스)   
+- NBP 환경(네이버 비즈니스 파트너스)  
 	K8S 환경 구축 시 Calico VXLAN으로 환경을 구성해야 한다.  
 	IPinIP 환경으로 구성하는 경우 서로 다른 노드의 POD 간 통신이 불가능하다.  
 	

@@ -6,8 +6,6 @@ date: 2024-02-28
 category: 2024
 ---
 
-# Hive Metastore
-
 ## 1. MySQL Install On Docker
 
 1. 데이터 저장용 디렉토리 / 도커 볼륨 생성  
