@@ -11,7 +11,7 @@ layout: post
 87키 키보드 기준(텐키리스) 아래와 같이 수행  
 
 - Popup(application) -> Fn  
-- Right-Command(한/영) -> F18  
+- Right-Command(한/영) -> F18
 - Pause/Break -> Power  
 
 풀 배열 맥 키보드  

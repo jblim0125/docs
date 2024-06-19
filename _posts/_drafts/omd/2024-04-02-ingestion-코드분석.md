@@ -810,39 +810,56 @@ ingestion/src/metadata
     }
     ```
 
-2. DAG에서 호출되는 python_callback `common.py`: metadata_ingestion_workflow()  
-    여기서 실행되는 MetadataWorkflow 상속 구조와 Source 는 위 그림 참조  
-    아무튼 MetadataWorkflow 를 생성하고 실행한다.  
-    `metadata/workflow/metadata.py` MetadataWorkflow  
-    create()
-    execute()
-    ...
-    stop()
-    으로 이어지는 작업을 수행  
+2. DAG에 등록된  PythonOperator 에 의해 동작  
+    python_callback = common.py:metadata_ingestion_workflow(OpenMetadataWorkflowConfig)  
 
-3. create()  
-    1. Metadata Workflow을 위한 Config를 설정하기 위해 받은 Config를 Parsing
-    2. Call __init__()
-        1. Store Config( Ingestion Pipeline Config )
-        2. Get Service Type From Config
-        3. Create Open Metadata Connection  
-        4. super.__init__() : metadata/workflow/base.py : BaseWorkflow  
-            1. 객체 데이터 초기화  
-            2. set logger level  
-            3. `create_ometa_client()` : metadata/ingestion/ometa/client_utils.py  
+    ```python
+    def metadata_ingestion_workflow(config: OpenMetadataWorkflowConfig):
+        set_operator_logger(workflow_config)
+
+        config = json.loads(workflow_config.json(encoder=show_secrets_encoder))
+        workflow = MetadataWorkflow.create(config)
+
+        workflow.execute()
+        workflow.raise_from_status()
+        print_status(workflow)
+        workflow.stop()
+    ```
+
+    여기서 호출되는 MetadataWorkflow 의 상속관계 정보  
+
+    ```text
+    MetadataWorkflow <- IngestionWorkflow <- BaseWorkflow <- WorkflowStatusMixin
+    ```
+
+3. create(config) -> IngestionWorkflow.create()  
+    1. Workflow을 위한 Config를 설정하기 위해 받은 Config를 Parsing
+    2. cls.__init__()  
+        1. Get Config( OpenMetadataWorkflowConfig )  
+        2. Get Service Type From Config  
+        3. Get OpenMetadataServerConfig From Config  
+        4. BaseWorkflow.__init__()  
+           1. Config  
+           2. ServiceType  
+           3. Timer  
+           4. Ingestion_Pipeline  
+           5. StartTime  
+           6. Init ExecutionTimeTracker  
+           7. set logger level  
+           8. `create_ometa_client()`: metadata/ingestion/ometa/client_utils.py  
                 1. metadata = `OpenMetadata()`  
                     1. Open Metadata Server와 통신용 Rest Client 초기화 ( 버전 체크 )  
                 2. metadata.health_check()  
-                3. return metadata
-            4. post_init() : metadata/workflow/ingestion.py  
+                3. return metadata  
+           9. post_init() -> IngestionWorkflow.post_init()  
                 1. _retrieve_service_connection_if_needed(service_type)  
-                    1. 데이터 저장소와 연결을 위한 설정  
-                2. set_steps() : metadata/workflow/ingestion.py -> metadata/workflow/metadata.py  
+                    1. 데이터 저장소 정보를 요청 -> 수신받아 Source Config 설정  
+                2. set_steps(): -> MetadataWorkflow.set_steps()
                     1. source = _get_source()  
                         1. source_class = import_from_module( service connection sourcePythonClass)  
                         이 예제에서는 mysql+pymysql ( metadata/ingestion/source/database/mysql/metadata.py )
                         2. source_class.create()
-                            1. metadata/ingestion/source/database/common_db_source.py : __init__  ( WorkflowSource, OpenMetadata(서버 연결용))
+                            1. metadata/ingestion/source/database/common_db_source.py : __init__  ( WorkflowSource, OpenMetadata(서버 연결용))  
                                 1. metadata = 서버 연결 용  
                                 2. service_connection = 서비스 연결 정보 config  
                                 3. connection_obj = engine = 실제 디비 연결 용  
@@ -856,24 +873,107 @@ ingestion/src/metadata
                         module : metadata/ingestion/sink/metadata_rest.py  
                         3. set sink_config  
                         4. sink_class(metadata_rest.py).create()  
-                    3. steps(sink, )
-4. execute()  
+                    3. steps(sink, )  
+4. execute() -> BaseWorkflow.execute()
     1. start timer : thread  
     2. set_ingestion_pipeline_status :  
         1. open metadata server로 pipeline 상태 정보 전송(`PUT CreateOrUpdate ingestion/{name}/pipelineStatus`)
-    3. execute_internal() : metadata/workflow/ingestion.py  
-        1. source.run() : Source에 해당하는 mysql/metadata.py 가 상속한 CommonDbSourceService 에 의해 동작  
-        2. IterStep._iter() 구현체는 TopologyRunnerMixin._iter()  
-            1. Topology 에 따라 동작  
-                1. Loop : Nodes  
-                    1. get node_producer  
-                    2. get child_nodes  
-                    3. Loop : node_producer()  
-                        1. Loop : Stages  
-                            1. TopologyRunnerMixin._process_stage()  
-                        2. Loop : Stages  
-                            1. TopologyRunnerMixin.context.clear_stage()  
-                        3. process_nodes(child_nodes)  
+    3. execute_internal() : IngestionWorkflow.execute_internal()  
+
+        ```python
+        # IngestionWorkflow Loop
+        def execute_internal():
+            for record in self.source.run():
+                processed_record = record
+                for step in self.steps:
+                    # We only process the records for these Step types
+                    if processed_record is not None and isinstance(
+                        step, (Processor, Stage, Sink)
+                    ):
+                        processed_record = step.run(processed_record)
+
+            # Try to pick up the BulkSink and execute it, if needed
+            bulk_sink = next(
+                (step for step in self.steps if isinstance(step, BulkSink)), None
+            )
+            if bulk_sink:
+                bulk_sink.run()
+        
+        # class Source(IterStep) 
+        def run(self) -> Iterable[Optional[Entity]]:
+            yield from super().run()
+
+        # class IterStep(Step) -> Step._iter() {abstract} -> TopologyRunnerMixin._iter()
+        def run() -> Iterable[Optional[Entity]]:
+             for result in self._iter():
+                if result.left is not None:
+                    self.status.failed(result.left)
+                    yield None
+
+                if result.right is not None:
+                    self.status.scanned(result.right)
+                    yield result.right
+        
+        # class TopologyRunner() 
+        # 여기서 사용되는 topology 는 class DatabaseServiceTopology(ServiceTopology) 를 사용  
+        # DatabaseServiceTopology 는 다음장 참고  
+        def _iter(self) -> Iterable[Either]:
+            yield from self.process_nodes(get_topology_root(self.topology))
+        
+        def process_nodes(get_topology_root(self.topology)) -> Iterable[Entity]:
+            for node in nodes:
+                logger.debug(f"Processing node {node}")
+                node_producer = getattr(self, node.producer)
+                child_nodes = self._get_child_nodes(node)
+
+                # Each node producer will give us a list of entities that we need
+                # to process. Each of the internal stages will sink result to OM API.
+                # E.g., in the DB topology, at the Table TopologyNode, the node_entity
+                # will be each `table`
+                for node_entity in node_producer() or []:
+                    for stage in node.stages:
+                        yield from self._process_stage(
+                            stage=stage, node_entity=node_entity, child_nodes=child_nodes
+                        )
+
+                    # Once we are done processing all the stages,
+                    for stage in node.stages:
+                        if stage.clear_context:
+                            self.context.clear_stage(stage=stage)
+
+                    # process all children from the node being run
+                    yield from self.process_nodes(child_nodes)
+
+                yield from self._run_node_post_process(node=node)
+        
+        def _process_stage(...) -> Iterable[Entity]:
+            logger.debug(f"Processing stage: {stage}")
+
+            stage_fn = getattr(self, stage.processor)
+            for entity_request in stage_fn(node_entity) or []:
+                try:
+                    # yield and make sure the data is updated
+                    yield from self.sink_request(stage=stage, entity_request=entity_request)
+                except ValueError as err:
+                    logger.debug(traceback.format_exc())
+                    logger.warning(
+                        f"Unexpected value error when processing stage: [{stage}]: {err}"
+                    )
+
+            if stage.cache_entities:
+                self._init_cache_dict(stage=stage, child_nodes=child_nodes)
+
+        ```
+
+        ```text
+        for node in topology.nodes():
+            for node_entity in node.producer():
+                for stage in node.stages():
+                    for stage_fn(node_stage_function()
+                        yield from self.sink_request()
+
+        ```
+
     4. 성공으로 판단하는 기준을 넘어서면 부분 성공으로 pipeline status 를 변경  
     5. build_ingestion_status() : step 에서 수집된 결과를 서버로 전송  
     6. set_ingestion_pipeline_status
@@ -882,7 +982,7 @@ ingestion/src/metadata
 6. print_status(workflow)  
 7. workflow.stop()  
 
-- Metadata Topology  
+## Database Metadata Topology  
 
 ```python
 class DatabaseServiceTopology(ServiceTopology):
@@ -1494,42 +1594,3 @@ UI -> Server
     }
 }
 ```
-
-#### `metadata_ingestion_workflow`에서 시작되는 클래스들의 주요 구조를 포함한 실행 정보  
-
-1. 실행과정  
-
-   ```text
-    MetadataWorkflow.create(config)
-        -> IngestionWorkflow.create(config)
-        -> IngestionWorkflow.__init__(config)
-            -> BaseWorkflow.__init__()
-            -> BaseWorkflow.post_init()
-        -> IngestionWorkflow.post_init() 
-        -> (IngestionWorkflow) self.set_steps()
-            -> MetadataWorkflow.set_steps()
-            -> MetadataWorkflow._get_source() : MysqlSourceService # MySQL Source 구조 확인  
-                -> MysqlSource.create()
-                    -> CommonDbSourceService.__init__() 
-                        -> super().__init__()
-                            -> DatabaseServiceSource
-                                -> TopologyRunnerMixin, Source
-                                    -> TopologyRunnerMixin
-                                        -> Generic..
-                                    -> Source
-                                        -> IterStep
-                                            -> Step
-                            -> SqlColumnHanderMixin
-                            -> SqlAlchemySource
-    workflow.execute()
-        -> BaseWorkflow.execute()
-            -> IngestionWorkflow.execute_internal()
-                -> self.source.run() : 
-                    -> MysqlSource <- CommonDbSourceService <- DatabaseServiceSource <- Source.run()
-                        -> Source <- IterStep.run()
-                            -> self._iter()
-                            = MysqlSource <- CommonDbSourceService <- DatabaseServiceSource <- TopologyRunnerMixin._iter()
-    workflow.raise_from_status()
-    print_satus(workflow)
-    workflow.stop()
-    ```
