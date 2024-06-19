@@ -14,6 +14,8 @@
 
 ## 메모
 
-Retention Period : 기능 확인 - 취소
-
-
+- [ ] OpenMetadata 와 융합/정제, 기본 데이터들의 리니지그래프
+- [ ] OpenMetadata 의 Tag 를 활용한 카테고리 구성 방안  
+- [ ] 모니터링 관련 고승범 - 김예지 내용 공유  
+- [ ] Blog - JWT  
+- [ ] Blog - Python ABC(Abstract Base Class)
