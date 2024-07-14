@@ -25,7 +25,12 @@ Spring Cloud Gateway과 관련해서 테스트를 진행하면서 변경된 부�
 4. R2DBC 를 사용하는 경우 JPA의 임베디드 기능을 이용 불가  
     서비스 레이어에서 서브데이터를 처리할 수 있도록 조치  
 
-### build.gradle.kts
+### 2. 소스와 간략한 설명
+
+#### build.gradle.kts
+
+R2DBC 적용에 따른 데이터베이스와 관련된 디펜던시의 변경
+데이터베이스 Init을 위한 Flayway 추가  
 
 ```gradle
 plugins {
@@ -114,7 +119,9 @@ tasks.named<Test>("test") {
 }
 ```
 
-### Application.properties
+#### Application.properties
+
+Actuator 사용을 위한 설정 추가  
 
 ```yaml
 logging:
@@ -161,7 +168,7 @@ spring:
 #         include: "gateway"
 ```
 
-### Configuration : Route
+#### Configuration : RouteLocator
 
 SpringCloudGateway 코드 분석 과정에서 본 `lookupRoute` 에서 사용될 수 있도록 `RouteLocator` 를 반환  
 
@@ -178,10 +185,9 @@ public class GatewayConfiguration {
 }
 ```
 
-### Entity
+#### Entity
 
-SpringCloudGateway의 `RouteDefinition`과 `Predicate`와 유사하게 변경
-// TODO : `Filter` 추가 필요  
+SpringCloudGateway의 `RouteDefinition`과 `Predicate`와 유사하게 변경  
 
 ```java
 @Table(TableName.APP_ROUTE_DEFINITION)
@@ -212,7 +218,7 @@ public class AppPredicate {
 }
 ```
 
-### Repository  
+#### Repository  
 
 `AppRouteDeinition` 에서 `predicate` 에 `@Transient`를 설정했으나 문제가 되어 `@Query`를 추가하여 처리  
 `AppPredicate` 의 경우 `ROUTE_ID` 를 이용해 데이터를 조회하고 삭제할 수 있도록 추가  
@@ -235,7 +241,7 @@ public interface AppPredicateRepository extends ReactiveCrudRepository<AppPredic
 }
 ```
 
-### Service
+#### Service
 
 R2DBC의 사용에 따른 서브 데이터 처리 추가  
 
@@ -345,7 +351,7 @@ public class ApiRouteServiceImpl implements ApiRouteService {
 }
 ```
 
-### Controller  
+#### Controller  
 
 ```java
 @RestController
@@ -422,7 +428,7 @@ public class InternalApiRouteController {
 }
 ```
 
-### refreshRoutes
+#### refreshRoutes
 
 라우팅 변경에 따른 이벤트를 전달하여 Gateway의 데이터가 변경될 수 있도록 함.
 
@@ -443,14 +449,14 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
 }
 ```
 
-### Test  
+### 3. Test  
 
 #### 준비  
 
-1. http server
+1. HTTP Server  
     `/hello` prefix 를 가지는 8082 포트의 http 서버 실행  
 
-2. database  
+2. Database  
     docker를 활용해 mariadb 실행  
 
     ```shell
@@ -465,6 +471,8 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
     ```
 
 #### 시험  
+
+조회 -> 라우팅 추가 -> 조회 -> 서비스 연결 순으로 테스트 진행  
 
 1. 조회  
 
@@ -550,6 +558,6 @@ public class GatewayRouteServiceImpl implements GatewayRouteService {
     Hello Gateway!
     ```
 
-## 다음은
+### 4. 다음은
 
 라우팅 기능의 강화와 인증(keycloak)과 로깅(Jager?)을 적용해 보자.  
