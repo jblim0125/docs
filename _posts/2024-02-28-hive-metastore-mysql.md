@@ -6,7 +6,7 @@ date: 2024-02-28
 category: 2024
 ---
 
-# Hive Metastore
+## Hive Metastore
 
 ## 1. MySQL Install On Docker
 
