@@ -13,7 +13,7 @@ keycloak에 대해서 잠시 알아보고 설치 및 설정을 진행할 계획�
 
 ### 1. 소개  
 
-키클로크는 오픈 소스로 신원 및 액세스 관리 솔루션입니다. 싱글 사인온, 사용자 인증, 웹 애플리케이션 및
+Keycloak은 오픈 소스로 신원 및 액세스 관리 솔루션입니다. 싱글 사인온, 사용자 인증, 웹 애플리케이션 및
 서비스에 대한 인증과 같은 기능을 제공합니다. Keycloak을 사용하면 사용자 신원, 역할 및 권한을 관리하여
 애플리케이션을 보호할 수 있습니다. 사용자 이름/암호, 소셜 로그인 및 다중 요소 인증을 포함한 다양한 인증
 메커니즘을 지원합니다. 또한, Keycloak은 Google, Facebook 및 LDAP 디렉토리와 같은 인기있는 신원
@@ -28,7 +28,7 @@ keycloak에 대해서 잠시 알아보고 설치 및 설정을 진행할 계획�
 도커가 설치되어 있어야 합니다.
 서비스하고자 하는 규모에 맞게 키클락을 위한 CPU와 메모리를 제공할 수 있는지 확인하세요. [권장성능사양](#3-권장-성능-사양)
 
-#### 2. 키클락 시작
+#### 2. Keycloak 시작
 
 터미널에서 다음 명령을 이용해 키클락 시작합니다.
 
@@ -45,7 +45,7 @@ docker run -itd --name keycloak \
 
 #### 3. 관리자 콘솔 로그인
 
-1. 키클락 관리자 콘솔 저속 (http://localhost:9090)  
+1. 관리자 콘솔 접속 (http://localhost:9090)  
 2. 2단계에서 작성한 관리자 정보로 로그인하세요.  
 
 #### 4. 영역(realm) 생성  
@@ -55,7 +55,7 @@ realm을 하나의 가상 공간으로 인지. 그리고 이 공간에 사용자
 
 Realm을 만들기 위한 단계는 다음과 같습니다.  
 
-1. Keycloak 관리 콘솔(keycloak 웹페이지)을 엽니다.  
+1. Keycloak 관리 콘솔에 접속합니다.  
 2. 상단의 Realm 선택 영역을 선택하고, Realm 생성을 클릭합니다.  
 3. Realm 이름 필드에 'test'을 입력합니다.  
 4. 생성을 클릭합니다.  
@@ -63,7 +63,7 @@ Realm을 만들기 위한 단계는 다음과 같습니다.
 
 #### 5. 사용자 생성  
 
-1. 관리자 콘솔 접속합니다.  
+1. Keycloak 관리 콘솔에 접속합니다.  
 2. 좌측상단의 master를 클릭하여 'test' realm 으로 이동합니다.  
 3. 좌측 패널의 Users - Create 를 클릭한다.  
 4. 다음과 같이 아이디와 성, 이름을 입력하고 Create 를 클릭한다.  
@@ -77,7 +77,7 @@ Realm을 만들기 위한 단계는 다음과 같습니다.
 
 #### 6. 클라이언트 생성
 
-1. 관리자 콘솔 접속합니다.  
+1. Keycloak 관리 콘솔에 접속합니다.  
 2. 좌측상단의 master를 클릭하여 'test' realm 으로 이동합니다.  
 3. Clients 클릭합니다.  
 4. 다음을 참고하여 데이터를 입력합니다.  
@@ -86,9 +86,12 @@ Realm을 만들기 위한 단계는 다음과 같습니다.
     Name: gateway  
     Description: Testing the integration of spring cloud gateway and keycloak  
 ![create-client-01](/assets/images/gateway/04/create-client-01.png)
-5. Capability Config 설정  
-6. Login 설정  
+5. Capability Config를 설정합니다.  
+![capability-set](/assets/images/gateway/04/capability-set.png)
+6. Login 설정 후 save를 클릭하여 클라이언트를 생성합니다.  
 ![create-client-02](/assets/images/gateway/04/create-client-02.png)
+7. credential 란으로 이동하여 client secret 을 확인합니다.  
+![client-secret](/assets/images/gateway/04/client-secret.png)
 
 ### 3. 권장 성능 사양
 
@@ -146,6 +149,15 @@ dependencies {
 ```
 
 #### App Configuration
+
+SpringBoot - Keycloak 연동을 위해 필요한 정보 설정  
+
+1. keycloak 관지 콘솔에 접속  
+2. 좌측 패널에서 Realm settings 클릭  
+3. 다음 사진에서 endpints 중 `OpenID Endpoint Configuration` 클릭  
+![endpoint-config](/assets/images/gateway/04/endpoint-config.png)
+4. Spring Config 작성 시 참고  
+![endpoint-info](/assets/images/gateway/04/endpoint-info.png)
 
 ```yaml
 spring:
