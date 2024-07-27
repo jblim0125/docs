@@ -206,31 +206,25 @@ Liquid는 템플릿 언어로 세 가지 부분으로 나눌 수 있습니다
 * 태그  
 * 필터  
 
+> Jekyll 를 사용한 블로그에서 Liquid 문법 사용 시 에러가 발생하여 코드들이 사진으로 첨부됩니다.
+
 1. 오브젝트
     오브젝트는 컨텐츠를 어디에 출력할 지 Liquid에 알려줍니다.  
-    두 개의 중괄호로 표시합니다: `{{` 와 `}}`.  
+    두 개의 중괄호로 표시합니다:  
 
     예시:
 
-    ```html
-    {{ page.title }}
-    ```
+    ![liquid-object](/assets/images/blog/liquid-object.png)
 
     페이지에 page.title 변수의 값을 출력합니다.
 
 2. 태그  
     태그는 템플릿의 논리 연산과 흐름을 제어합니다.  
-    중괄호와 퍼센트 문자로 표시합니다: `{%` 와 `%}`.  
+    중괄호와 퍼센트 문자로 표시합니다:  
 
     예시:
 
-    ```html
-    {% if page.show_sidebar %}
-      <div class="sidebar">
-        sidebar content
-      </div>
-    {% endif %}
-    ```
+    ![liquid-tag](/assets/images/blog/liquid-tag.png)
 
     변수 `page.show_sidebar` 가 참인 경우에 사이드바를 출력합니다.  
 
@@ -239,9 +233,7 @@ Liquid는 템플릿 언어로 세 가지 부분으로 나눌 수 있습니다
 
     예시:
 
-    ```html
-    {{ "hi" | capitalize }}
-    ```
+    ![liquid-filter](/assets/images/blog/liquid-filter.png)
 
     소문자로 구성된 'hi'가 'Hi'로 출력됩니다.  
 
@@ -252,36 +244,16 @@ Liquid는 템플릿 언어로 세 가지 부분으로 나눌 수 있습니다
 
 예시:
 
-```html
----
-my_number: 5
----
-```
+![header01](/assets/images/blog/header-01.png)
 
 머리말 변수는 Liquid에서 page 변수로 사용할 수 있습니다.  
 예를 들어 위 변수를 출력하기 위해서는 다음과 같이 합니다.  
 
-```html
-{{ page.my_number }}
-```
+![header02](/assets/images/blog/header-02.png)
 
 머리말을 사용해서 사이트의 `<title>` 을 바꿔봅시다:
 
-```html
----
-title: Home
----
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>{{ page.title }}</title>
-  </head>
-  <body>
-    <h1>{{ "Hello World!" | downcase }}</h1>
-  </body>
-</html>
-```
+![header03](/assets/images/blog/header-03.png)
 
 결과  
 ![liquid_result](/assets/images/blog/liquid_result.png)
@@ -310,18 +282,7 @@ Jekyll은 HTML 뿐만 아니라 마크다운도 지원합니다. 마크다운은
 
     다음과 같은 내용으로 `_layouts/default.html` 에 첫 번째 레이아웃을 생성합니다.
 
-    ```html
-    <!doctype html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <title>{{ page.title }}</title>
-      </head>
-      <body>
-        {{ content }}
-      </body>
-    </html>
-    ```
+    ![layout-01](/assets/images/blog/layout-01.png)
 
     내용이 index.html 과 거의 똑같다는 것을 눈치챌 수 있겠지만, 머리말이 없고
     페이지의 컨텐츠 부분에 변수 content 가 사용되었다는 차이점이 있습니다.
@@ -329,13 +290,7 @@ Jekyll은 HTML 뿐만 아니라 마크다운도 지원합니다. 마크다운은
 
     `index.html` 에 이 레이아웃을 사용하기 위해, 다음과 같이 변경합니다.  
 
-    ```html
-    ---
-    layout: default
-    title: Home
-    ---
-    <h1>{{ "Hello World!" | downcase }}</h1>
-    ```
+    ![layout-02](/assets/images/blog/layout-02.png)
 
     이렇게 하면, 출력 결과는 이전과 완벽하게 동일할 것입니다. 기억할 것은 레이아웃으로부터 페이지(page)의 머리말에 접근한다는 것입니다. 위 예시에서, `title` 은 인덱스 페이지의 머리말에 설정되었지만 레이아웃에서 출력되었습니다.
 
@@ -344,13 +299,7 @@ Jekyll은 HTML 뿐만 아니라 마크다운도 지원합니다. 마크다운은
 
     다음 내용을 about.md 에 추가합니다:
 
-    ```markdown
-    ---
-    layout: default
-    title: About
-    ---
-    # About page
-    ```
+    ![alt text](/assets/images/blog/layout-03.png)
 
     브라우저에서 `http://localhost:4000/about.html` 를 열어 새 페이지를 확인합니다.
 
@@ -378,28 +327,11 @@ Jekyll은 HTML 뿐만 아니라 마크다운도 지원합니다. 마크다운은
 2. 조각파일 사용법  
     네비게이션을 위해 `_includes/navigation.html` 파일을 다음과 같이 작성하여 저장합니다.  
 
-    ```html
-    <nav>
-      <a href="/">Home</a>
-      <a href="/about.html">About</a>
-    </nav>
-    ```
+    ![include-01](/assets/images/blog/include-01.png)
 
     include 태그를 사용해서 `_layouts/default.html` 에 네비게이션을 추가합니다:
 
-    ```html
-    <!doctype html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <title>{{ page.title }}</title>
-      </head>
-      <body>
-        {% include navigation.html %}
-        {{ content }}
-      </body>
-    </html>
-    ```
+    ![layouts-default](/assets/images/blog/layouts_default.png)
 
     브라우저에서 `http://localhost:4000` 를 열어 페이지 사이를 이동해봅니다.
 
@@ -414,16 +346,7 @@ Jekyll은 HTML 뿐만 아니라 마크다운도 지원합니다. 마크다운은
 
     `page.url` 을 사용해서 각 링크가 현재 페이지인지 확인하고 만약 그렇다면 빨간색으로 표시합니다:
 
-    ```html
-    <nav>
-      <a href="/" {% if page.url == "/" %}style="color: red;"{% endif %}>
-        Home
-      </a>
-      <a href="/about.html" {% if page.url == "/about.html" %}style="color: red;"{% endif %}>
-        About
-      </a>
-    </nav>
-    ```
+    ![current-page](/assets/images/blog/current-page.png)
 
     브라우저에서 `http://localhost:4000` 을 열어 현재 페이지 링크가 빨간색인지 확인합니다.  
 
@@ -456,15 +379,7 @@ YAML 은 루비 생태계에서 흔히 사용되는 형식입니다. 네비게�
 Jekyll 은 `site.data.navigation` 으로 이 데이터 파일을 사용할 수 있게 만듭니다.
 `_includes/navigation.html` 에 링크들을 일일히 출력하는 대신, 데이터 파일을 통해 나열할 수 있습니다.
 
-```html
-<nav>
-  {% for item in site.data.navigation %}
-    <a href="{{ item.link }}" {% if page.url == item.link %}style="color: red;"{% endif %}>
-      {{ item.name }}
-    </a>
-  {% endfor %}
-</nav>
-```
+![data-navi](/assets/images/blog/data-navi.png)
 
 완벽하게 동일한 결과를 얻을 수 있습니다.  
 
@@ -495,13 +410,7 @@ Jekyll 사이트는 에셋들을 정돈하는데에 이런 구조를 자주 사�
 `_includes/navigation.html` 에 사용했었던 인라인 스타일은 좋은 방법이 아닙니다.  
 클래스를 사용해서 이 페이지에 스타일을 입혀봅시다.
 
-```html
-<nav>
-  {% for item in site.data.navigation %}
-    <a href="{{ item.link }}" {% if page.url == item.link %}class="current"{% endif %}>{{ item.name }}</a>
-  {% endfor %}
-</nav>
-```
+![sass-navi](/assets/images/blog/sass-navi.png)
 
 표준 CSS 파일을 사용해서 스타일을 정의할 수도 있겠지만, 여기서는 한 걸음 더 나아가 `Sass` 를 사용해보겠습니다. Sass 는 Jekyll 에 녹아들어있는 환상적인 CSS 확장기능입니다.
 
@@ -532,20 +441,7 @@ Sass 파일을 `_sass/main.scss` 에 생성하고 다음 내용을 입력합니�
 
 `_layouts/default.html` 을 열고 `<head>` 에 이 스타일시트를 추가합니다:
 
-```html
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>{{ page.title }}</title>
-    <link rel="stylesheet" href="/assets/css/styles.css">
-  </head>
-  <body>
-    {% include navigation.html %}
-    {{ content }}
-  </body>
-</html>
-```
+![sass-default](/assets/images/blog/sass-default.png)
 
 여기에 있는 `styles.css` 는 앞서 `assets/css/` 에 만든 `styles.scss` 로부터
 Jekyll 이 생성한 파일입니다.
@@ -577,15 +473,7 @@ Jekyll 스타일로 블로그를 설정할 때 데이터베이스 없이 텍스�
 
     파일 경로: `_layouts/post.html`
 
-    ```html
-    ---
-    layout: default
-    ---
-    <h1>{{ page.title }}</h1>
-    <p>{{ page.date | date_to_string }} - {{ page.author }}</p>
-
-    {{ content }}
-    ```
+    ![blog-post-layout](/assets/images/blog/blog-post-layout.png)
 
 3. 글 목록 페이지 만들기
     블로그 글로 이동할 수 있는 방법이 필요합니다. 보통 블로그는 모든 글을 나열한 페이지가 있습니다.  
@@ -593,22 +481,7 @@ Jekyll 스타일로 블로그를 설정할 때 데이터베이스 없이 텍스�
 
     파일 경로: `blog.html`
 
-    ```html
-    ---
-    layout: default
-    title: Blog
-    ---
-    <h1>Latest Posts</h1>
-
-    <ul>
-      {% for post in site.posts %}
-        <li>
-          <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-          <p>{{ post.excerpt }}</p>
-        </li>
-      {% endfor %}
-    </ul>
-    ```
+    ![blog-html](/assets/images/blog/blog-html.png)
 
 4. 내비게이션 설정하기
     블로그 페이지로 이동할 수 있는 링크를 메인 내비게이션에 추가합니다.  
@@ -653,4 +526,5 @@ Jekyll 스타일로 블로그를 설정할 때 데이터베이스 없이 텍스�
 
 ![blog-01](/assets/images/blog/blog-01.png)
 
-### 다음 시간에 이어서 진행
+### Collection
+
