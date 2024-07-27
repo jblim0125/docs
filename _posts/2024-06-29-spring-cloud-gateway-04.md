@@ -45,7 +45,7 @@ docker run -itd --name keycloak \
 
 #### 3. 관리자 콘솔 로그인
 
-1. 관리자 콘솔 접속 (http://localhost:9090)  
+1. 관리자 콘솔 접속 (`http://localhost:9090`)  
 2. 2단계에서 작성한 관리자 정보로 로그인하세요.  
 
 #### 4. 영역(realm) 생성  
