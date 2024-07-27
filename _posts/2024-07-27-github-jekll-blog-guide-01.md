@@ -463,7 +463,7 @@ Jekyll 스타일로 블로그를 설정할 때 데이터베이스 없이 텍스�
     ```markdown
     ---
     layout: post
-    author: jblim
+    author: jill
     ---
     바나나는 맛있다.  
     ```
@@ -507,7 +507,7 @@ Jekyll 스타일로 블로그를 설정할 때 데이터베이스 없이 텍스�
     ```markdown
     ---
     layout: post
-    author: jblim
+    author: jill
     ---
     사과는 맛있다.
     ```
@@ -524,7 +524,7 @@ Jekyll 스타일로 블로그를 설정할 때 데이터베이스 없이 텍스�
 
 6. 확인  
 
-![blog-01](/assets/images/blog/blog-01.png)
+    ![blog-01](/assets/images/blog/blog-01.png)
 
 ### Collection
 
