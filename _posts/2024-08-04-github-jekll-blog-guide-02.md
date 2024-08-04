@@ -2,12 +2,9 @@
 layout: post
 title: "github jekyll 를 이용한 블로그 만들기 02"
 author: jblim0125
-date: 2024-07-30
+date: 2024-08-04
 category: 2024
 ---
-
-
-## 4. 단계별 튜토리얼
 
 지난 시간에 이어서 Jekyll을 사용한 블로그에 대해서 설명하고자 합니다.  
 
