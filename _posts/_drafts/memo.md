@@ -1,21 +1,103 @@
-# 할 일 목록
+# 공지
 
-- [ ] 매월 업무 등록 29일  
+- 매월 업무 등록 29일  
+- 휴가가 예정된 경우 일주일 전  
 
-- [ ] 24.09 데이터 패브릭 테스트 수행  
+## 회사 업무
 
-- [ ] Fabric 착수보고 자료 추가 정리  
+- 2025년 1월 7일  
+  - [x] 재난 안전 융합 데이터 리스트 쌍 정리 후 전달(기획팀 - 김소연) : 서승환  
+  - [x] 데이터 패브릭 단계 보고 PPT : 완료보고 검토회의 자료 기반으로 작성
+  - [x] 3차년도 개발 계획 수립  
+    - 데이터플로우는 쿼리 UI or 데이터 파이프라인에서 타프로젝트 호환을 고려하여 데이터 파이프라인으로 진행
+    - 오픈소스(OpenMetadata) 제거 후 서버 구성 시 고려사항 확인 요청 : 김유경  
+- 2025년 1월 8일
+  - [x] 오픈소스 제거 후 신규 작성 시 데이터 포맷의 변경이 많이 않다면 1달 내 수정 가능하다 의견 : 김유경  
+  - [x] OVP 시연 영상 제작을 위한 저장소 정보 공유 : 배한솔책임  
+  - [x] 연구 노트 작성  
+    - [x] 목차 작성  
+    - [x] 내용 추가  
+  - [x] 3차년도 예산 삭감이 예상 됨에 따른 연구 내용 변경 준비  
+    - 2차년도와 동일하게 Agent, 외부 연동(JDBC, RestAPI) 개발 진행하지 않음.
+    - 공인시험 -> 자체평가 변경 or 가상화오버헤드만이라도 자체 시험으로 변경
+    - 티맥스 연구내용 : 메모리 최적화 관련 연구내용과 데이터 통합 기록 기반 연관 규칙 분석
+  - [x] 데이터패브릭 - 워크플로우 개발 방향 재정의 - Data pipeline 으로 결론 : 타 프로젝트 재사용 by서승환  
+- 2025년 1월 9일
+  - [x] 면담 진행
+    - 연구소 조직 개편 가능성 : 과제, 솔루션
+    - 3월까지 제안서 4개 작성
+    - 데이터패브릭 : OpenMetadata 걷어내는 것, Metadata Engine 의 개선  
+  - 연구 노트 작성  
+    - [v] 1차년도 내용 작성  
+    - [x] 2차년도 내용 작성 - 서승환, 고승범 나누어 작성  
+- 2025년 1월 10일  
+  - [ ] 연구 노트 작성 완료 - 주말 작성 필요  
+  - [ ] 단계 보고 PPT 1차 완성 완료 - 주말 작성 필요  
+- 2025년 1월 13일  
+  - [ ] 연구 노트 작성 완료
+  - [ ] 단계 보고 PPT 1차 완성본 전달  
+  - [ ] 가상화 오버헤드 영상 전달 by 서승환 to 엄민선  
 
-- [v] github 저장소 Repo 구성 -> OpenMetadata + 24년도 목표 달성을위한 구성  
-  Fabric 매주(매일) commit 필요
-      OpenMetadata Server Upload
-      OpenMetadata Wrapping Server(Proxy) Upload 주(일) 단위 업로드
-      Airflow - Workflow 마찬가지로 수행
+## 개인 업무
 
-## 메모
+- [ ] Jaeger  
+  - 환경설정, 배포, 사용 등 내용 정리
+- [ ] Spring Cloud Gateway
+- [ ] Spring Security
+- [ ] Keycloak
+  - [ ] AccessControl
+    - [ ] Resource 등록  
+    - [ ] RBAC 기반
+    - [ ] USER/GROUP
+    - [ ] Attribute
+- [ ] 1월 11일 결혼식 사진 관련  
 
-- [ ] OpenMetadata 와 융합/정제, 기본 데이터들의 리니지그래프
-- [ ] OpenMetadata 의 Tag 를 활용한 카테고리 구성 방안  
-- [ ] 모니터링 관련 고승범 - 김예지 내용 공유  
-- [ ] Blog - JWT  
-- [ ] Blog - Python ABC(Abstract Base Class)
+## 건강검진
+
+- 25년 1월 10일 건강검진 결과  
+  - [ ] 간 관련 영상촬영 필요 의견  
+  - [ ] A형간염 예방접종 필요 소견  
+  - [ ] 유키 오른쪽 유방 관촬 필요 의견(6개월)  
+
+## 데이터 패브릭
+
+- Mail 관련 정보  
+  Gmail - SMTP Setting
+  ID : datafabric.test
+  PW : ukpcbqzuqlpdmwpi
+  SERVER : smtp.gmail.com
+  PORT : 587
+  PROTOCOL : SMTP_TLS
+  SENDER : datafabric.test@gmail.com
+
+### 연구노트 목차  
+
+p.38 협업필터링
+p.39
+p.40
+p.41
+
+p.42 개발환경
+p.43 Gradle
+p.44 
+p.45
+
+p.46 사용자 관리 - usecase
+p.47 data arch
+p.48 api
+
+p.49 access control - rbac, user, attribute 소개
+p.50 디비설계
+p.51 api
+p.52 
+
+p.53 저장소 인터페이스
+p.54 내부 연동 시나리오 및 동작
+
+p.55 저장소 이벤트에 따른 모니터링, 메타데이터 수집 연동 
+p.56 메타데이터 수집 프로세스
+p.57 
+p.58 데이터 저장 동작
+
+p.59 데이터 탐색 api
+p.60 데이터 검색 api 
