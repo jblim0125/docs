@@ -36,7 +36,7 @@ YouCompleteMe 를 포함한 플러그인 활성화를 포함
 6. VIM configuration  
     - Get Python Config Path  
         x64의 경우  
-        python2 : /usr/lib64/python2.X/config 
+        python2 : /usr/lib64/python2.X/config
         python3 : /usr/lib64/python3.X/config....
 
         ```bash
@@ -126,14 +126,19 @@ YouCompleteMe 를 포함한 플러그인 활성화를 포함
 9. How To Install Color Scheme  
     9.1. vim color scheme를 다운
     ex : molokai  
+
     ```bash
-    $ git clone https://github.com/tomasr/molokai.git && cd molokai
+    git clone https://github.com/tomasr/molokai.git && cd molokai
     ```
+
     9.2. ~/.vim/colors 폴더에 복사  
+
     ```bash
-    $ mkdir ~/.vim/colors && cp colors/*.vim ~/.vim/colors
+    mkdir ~/.vim/colors && cp colors/*.vim ~/.vim/colors
     ```
+
     9.3. ~/.vimrc 파일에 설정  
+
     ```bash
     $ vi ~/.vimrc
 
@@ -150,6 +155,7 @@ YouCompleteMe 를 포함한 플러그인 활성화를 포함
     ```
 
 Appendix.1. Golang  
+
 ```bash
 wget https://dl.google.com/go/go1.14.4.linux-amd64.tar.gz
 tar -C /usr/local -xzf go1.14.4.linux-amd64.tar.gz
@@ -163,6 +169,7 @@ Appendix.3. Yaml
 Appendix.4. Markdown  
 
 Appendix.5. Example .vimrc  
+
 ```.vimrc
 set nocompatible              " required
 filetype off                  " required
